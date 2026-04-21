@@ -47,12 +47,12 @@ export default async function CustomerDetailPage({
   if (!customer) notFound();
 
   const totalInvoiced = customer.jobs
-    .flatMap((j) => j.invoices)
+    .flatMap((j: any) => j.invoices)
     .filter((i) => ["SENT", "PAID", "OVERDUE"].includes(i.status))
     .reduce((sum, i) => sum + Number(i.total), 0);
 
   const totalPaid = customer.jobs
-    .flatMap((j) => j.invoices)
+    .flatMap((j: any) => j.invoices)
     .filter((i) => i.status === "PAID")
     .reduce((sum, i) => sum + Number(i.total), 0);
 
