@@ -49,10 +49,9 @@ export async function POST(
       data: {
         userId: quote.userId,
         type: action === "accept" ? "QUOTE_ACCEPTED" : "QUOTE_DECLINED",
-        title: action === "accept"
-          ? `Quote accepted: ${quote.quoteNumber}`
-          : `Quote declined: ${quote.quoteNumber}`,
-        message: `${quote.customer?.name ?? "Customer"} has ${action}d ${quote.quoteNumber}.`,
+        message: action === "accept"
+          ? `Quote accepted: ${quote.quoteNumber} — ${quote.customer?.name ?? "Customer"} has accepted.`
+          : `Quote declined: ${quote.quoteNumber} — ${quote.customer?.name ?? "Customer"} has declined.`,
       },
     }),
   ]);

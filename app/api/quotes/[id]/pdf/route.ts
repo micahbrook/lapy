@@ -26,7 +26,8 @@ export async function GET(
   if (!quote) return NextResponse.json({ error: "Not found" }, { status: 404 });
 
   const buffer = await renderToBuffer(
-    createElement(QuotePDF, { quote, user, customer: quote.customer })
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    createElement(QuotePDF, { quote, user, customer: quote.customer }) as any
   );
 
   // Upload to Supabase and cache pdfUrl
@@ -42,7 +43,7 @@ export async function GET(
     // Upload failure is non-fatal — still return PDF
   }
 
-  return new NextResponse(buffer, {
+  return new NextResponse(new Uint8Array(buffer), {
     headers: {
       "Content-Type": "application/pdf",
       "Content-Disposition": `attachment; filename="${quote.quoteNumber}.pdf"`,

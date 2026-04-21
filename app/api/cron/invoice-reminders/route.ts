@@ -113,8 +113,7 @@ Write 2-3 short paragraphs. Sign off with ${businessName}. Use Australian Englis
           data: {
             userId: user.id,
             type: "INVOICE_OVERDUE",
-            title: `Auto-reminder sent: ${invoice.invoiceNumber}`,
-            message: `${tone} auto-reminder sent to ${customer.email} (${overdueDays} days overdue)`,
+            message: `Auto-reminder sent: ${invoice.invoiceNumber} — ${tone} auto-reminder sent to ${customer.email} (${overdueDays} days overdue)`,
           },
         }),
       ]);

@@ -103,8 +103,7 @@ Write 2-3 short paragraphs. Sign off with ${businessName}. Use Australian Englis
       data: {
         userId: user.id,
         type: "INVOICE_OVERDUE",
-        title: `Reminder sent: ${invoice.invoiceNumber}`,
-        message: `${tone} reminder sent to ${customer.email}`,
+        message: `Reminder sent: ${invoice.invoiceNumber} — ${tone} reminder sent to ${customer.email}`,
       },
     }),
   ]);

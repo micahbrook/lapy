@@ -28,7 +28,8 @@ export async function GET(
   const customer = invoice.job?.customer ?? null;
 
   const buffer = await renderToBuffer(
-    createElement(InvoicePDF, { invoice, user, customer })
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    createElement(InvoicePDF, { invoice, user, customer }) as any
   );
 
   try {
@@ -43,7 +44,7 @@ export async function GET(
     // non-fatal
   }
 
-  return new NextResponse(buffer, {
+  return new NextResponse(new Uint8Array(buffer), {
     headers: {
       "Content-Type": "application/pdf",
       "Content-Disposition": `attachment; filename="${invoice.invoiceNumber}.pdf"`,

@@ -19,12 +19,14 @@ export async function POST(req: NextRequest) {
       const session = event.data.object as Stripe.Checkout.Session;
       if (session.mode !== "subscription") break;
 
-      const userId = session.subscription_data?.metadata?.userId as string;
-      const plan = session.subscription_data?.metadata?.plan as string;
-      if (!userId || !plan) break;
-
       const stripeSubscriptionId = session.subscription as string;
       const stripeSub = await stripe.subscriptions.retrieve(stripeSubscriptionId);
+
+      const userId = stripeSub.metadata?.userId as string;
+      const plan = stripeSub.metadata?.plan as string;
+      if (!userId || !plan) break;
+
+      const periodEnd = stripeSub.items.data[0]?.current_period_end;
 
       await prisma.subscription.upsert({
         where: { userId },
@@ -34,14 +36,14 @@ export async function POST(req: NextRequest) {
           stripeCustomerId: session.customer as string,
           stripeSubscriptionId,
           status: "ACTIVE",
-          currentPeriodEnd: new Date(stripeSub.current_period_end * 1000),
+          currentPeriodEnd: periodEnd ? new Date(periodEnd * 1000) : null,
         },
         update: {
           plan: plan as any,
           stripeCustomerId: session.customer as string,
           stripeSubscriptionId,
           status: "ACTIVE",
-          currentPeriodEnd: new Date(stripeSub.current_period_end * 1000),
+          currentPeriodEnd: periodEnd ? new Date(periodEnd * 1000) : null,
           cancelAtPeriodEnd: false,
         },
       });
@@ -63,11 +65,12 @@ export async function POST(req: NextRequest) {
         ? "PAST_DUE"
         : "CANCELED";
 
+      const subPeriodEnd = stripeSub.items.data[0]?.current_period_end;
       await prisma.subscription.update({
         where: { id: sub.id },
         data: {
           status: status as any,
-          currentPeriodEnd: new Date(stripeSub.current_period_end * 1000),
+          currentPeriodEnd: subPeriodEnd ? new Date(subPeriodEnd * 1000) : null,
           cancelAtPeriodEnd: stripeSub.cancel_at_period_end,
         },
       });
@@ -85,7 +88,11 @@ export async function POST(req: NextRequest) {
 
     case "invoice.payment_failed": {
       const invoice = event.data.object as Stripe.Invoice;
-      const stripeSub = await stripe.subscriptions.retrieve(invoice.subscription as string);
+      const subId = invoice.parent?.type === "subscription_details"
+        ? (invoice.parent.subscription_details?.subscription as string)
+        : undefined;
+      if (!subId) break;
+      const stripeSub = await stripe.subscriptions.retrieve(subId);
       await prisma.subscription.updateMany({
         where: { stripeSubscriptionId: stripeSub.id },
         data: { status: "PAST_DUE" },

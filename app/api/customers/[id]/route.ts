@@ -2,7 +2,7 @@ import { auth } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
-import { Prisma } from "@prisma/client";
+import { Prisma, AustralianState } from "@prisma/client";
 
 const patchSchema = z.object({
   name: z.string().min(1).optional(),
@@ -59,9 +59,13 @@ export async function PATCH(
   if (!parsed.success) return NextResponse.json({ error: parsed.error.message }, { status: 400 });
 
   try {
+    const { state, ...rest } = parsed.data;
     const customer = await prisma.customer.update({
       where: { id, userId: user.id },
-      data: parsed.data,
+      data: {
+        ...rest,
+        ...(state !== undefined ? { state: state as AustralianState | null } : {}),
+      },
     });
     return NextResponse.json(customer);
   } catch (e) {

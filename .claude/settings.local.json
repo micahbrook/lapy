@@ -6,7 +6,10 @@
       "Bash(npx prisma *)",
       "Bash(npx tsc *)",
       "Bash(node -e \"const s = require\\('stripe'\\); console.log\\(Object.keys\\(s\\).slice\\(0,3\\)\\)\")",
-      "Bash(npm show *)"
+      "Bash(npm show *)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git push *)"
     ]
   }
 }

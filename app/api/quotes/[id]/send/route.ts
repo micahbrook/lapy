@@ -37,7 +37,8 @@ export async function POST(
 
   if (!pdfUrl) {
     buffer = await renderToBuffer(
-      createElement(QuotePDF, { quote, user, customer: quote.customer })
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      createElement(QuotePDF, { quote, user, customer: quote.customer }) as any
     );
     try {
       pdfUrl = await uploadFile("pdfs", `quotes/${id}.pdf`, buffer, "application/pdf");
