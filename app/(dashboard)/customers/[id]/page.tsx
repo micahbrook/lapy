@@ -179,7 +179,7 @@ export default async function CustomerDetailPage({
                             : ""}
                         </p>
                         <div className="flex gap-2 mt-2 flex-wrap">
-                          {job.quotes.map((q) => (
+                          {job.quotes.map((q: any) => (
                             <span
                               key={q.id}
                               className="text-xs text-gray-500 bg-gray-100 rounded px-1.5 py-0.5"
@@ -187,7 +187,7 @@ export default async function CustomerDetailPage({
                               {q.quoteNumber}
                             </span>
                           ))}
-                          {job.invoices.map((i) => (
+                          {job.invoices.map((i: any) => (
                             <span
                               key={i.id}
                               className="text-xs text-blue-700 bg-blue-50 rounded px-1.5 py-0.5"
