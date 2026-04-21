@@ -2,7 +2,7 @@ import { auth } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
-import { Prisma, AustralianState } from "@prisma/client";
+import { AustralianState } from "@prisma/client";
 
 const patchSchema = z.object({
   name: z.string().min(1).optional(),
@@ -69,7 +69,7 @@ export async function PATCH(
     });
     return NextResponse.json(customer);
   } catch (e) {
-    if (e instanceof Prisma.PrismaClientKnownRequestError && e.code === "P2025") {
+    if ((e as any)?.code === "P2025") {
       return NextResponse.json({ error: "Not found" }, { status: 404 });
     }
     throw e;
