@@ -48,13 +48,13 @@ export default async function CustomerDetailPage({
 
   const totalInvoiced = customer.jobs
     .flatMap((j: any) => j.invoices)
-    .filter((i) => ["SENT", "PAID", "OVERDUE"].includes(i.status))
-    .reduce((sum, i) => sum + Number(i.total), 0);
+    .filter((i: any) => ["SENT", "PAID", "OVERDUE"].includes(i.status))
+    .reduce((sum: any, i: any) => sum + Number(i.total), 0);
 
   const totalPaid = customer.jobs
     .flatMap((j: any) => j.invoices)
-    .filter((i) => i.status === "PAID")
-    .reduce((sum, i) => sum + Number(i.total), 0);
+    .filter((i: any) => i.status === "PAID")
+    .reduce((sum: any, i: any) => sum + Number(i.total), 0);
 
   return (
     <div className="p-4 lg:p-8 max-w-4xl mx-auto">
