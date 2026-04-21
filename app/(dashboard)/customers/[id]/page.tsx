@@ -165,7 +165,7 @@ export default async function CustomerDetailPage({
           </Card>
         ) : (
           <div className="space-y-3">
-            {customer.jobs.map((job) => (
+            {customer.jobs.map((job: any) => (
               <Link key={job.id} href={`/jobs/${job.id}`}>
                 <Card className="hover:shadow-md transition-shadow">
                   <CardContent className="p-4">
