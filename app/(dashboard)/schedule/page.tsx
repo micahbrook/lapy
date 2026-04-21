@@ -94,7 +94,7 @@ export default async function SchedulePage() {
         </div>
       ) : (
         <div className="space-y-6">
-          {Object.entries(grouped).map(([dateKey, jobs]) => (
+          {(Object.entries(grouped) as [string, typeof upcomingJobs][]).map(([dateKey, jobs]) => (
             <div key={dateKey}>
               <h2 className="text-sm font-semibold text-gray-500 uppercase mb-2">
                 {dayLabel(new Date(dateKey + "T00:00:00"))}
